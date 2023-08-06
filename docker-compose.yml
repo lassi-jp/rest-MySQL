@@ -1,0 +1,37 @@
+version: "3"
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    container_name: my-db
+    environment:
+      - MYSQL_DATABASE=sample
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=strongpasswd
+      - MYSQL_ROOT_PASSWORD=passwd
+      - TZ="Asia/Tokyo"
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      external-api:
+        ipv4_address: 172.18.0.5
+      internal-db:
+
+    
+
+  app:
+    build: ./python
+    container_name: app-python
+    ports:
+      - 5050:5000
+    networks:
+      external-api:
+        ipv4_address: 172.18.0.10
+      internal-db:
+
+networks:
+  external-api:
+    external: true
+    
+  internal-db:
