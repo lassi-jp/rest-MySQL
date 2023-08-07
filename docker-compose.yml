@@ -1,7 +1,7 @@
 version: "3"
 services:
   db:
-    image: mysql:latest
+    image: mysql:5.7
     ports:
       - 3306:3306
     container_name: my-db
@@ -13,6 +13,12 @@ services:
       - TZ="Asia/Tokyo"
     volumes:
       - ./initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -uroot -ppasswd
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       external-api:
         ipv4_address: 172.18.0.5
@@ -27,8 +33,11 @@ services:
       - 5050:5000
     networks:
       external-api:
-        ipv4_address: 172.18.0.10
       internal-db:
+    depends_on:
+      db:
+        condition: service_healthy
+
 
 networks:
   external-api:
