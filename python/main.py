@@ -42,7 +42,9 @@ def create_single_item():
 
 def conn_db():
     conn = mysql.connector.connect(
-        host='localhost:3306/sample?allowPublicKeyRetrieval=true&useSSL=false',
+        host='172.18.0.5',
+        port='3306',
+        database='sample',
         user='root',
         passwd='passwd'
     )
@@ -82,4 +84,4 @@ def check_uni_key(key):
         return False
 
 if __name__ == '__main__':
-    app.run(debug=False, host=0.0.0.0 port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)
